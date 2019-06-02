@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- Main Content -->
+<div class="container">
+
+    <div class="write-post">
+        <div class="write-title">
+            <h2>송아리 아이티 방명록 작성하기</h2>
+            <input class="form-control" type="text" name="title" id="title" placeholder="제목을 입력하세요.">
+        </div>
+        <div class="write-content">
+            <textarea class="form-control" rows="5" name="content" id="content" placeholder="내용을 입력하세요."></textarea>
+        </div>
+        <input type="button" class="btn btn-primary pull-right" id="write" value="작성하기">
+    </div>
+
+
+                <div id="list">
+                    <div th:id="'list_'+${post.id}" class="post-preview" th:each="post : ${posts}">
+                        <h4 class="post-title" th:text="'제목 : ' +${post.title}"></h4>
+                        <h4 th:text="'내용 : ' + ${post.content}"></h4>
+                        <p class="post-meta">Posted by <a href="#">Guest</a> <strong th:text="${post.regDate}"> </strong> </p>
+                        <button class="btn btn-primary" th:id="'delete'+${post.id}" th:value="${post.id}" onclick="delete_click(this.value)">삭제</button>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+            <div id="test"></div>
+        </div>
+</div>
+
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" language="javascript">
+
+    $("#write").click(function(){
+
+        var data = {};
+        data["title"]=$('#title').val();
+        data["content"]=$('#content').val();
+
+
+        $.ajax({
+            url : "http://localhost:8080/post",
+            contentType : 'application/json',
+            data : JSON.stringify(data),
+            type : "POST",
+            dataType : "json",
+            success : function(data) {
+                // $("list").append(data);
+                $("#list").load(document.URL + ' #list');
+
+            },
+            error : function name(){
+                $("#test").append("error");
+            }
+        });
+
+        $("#title").val("");
+        $("#content").val("");
+
+    });
+
+    function delete_click(clicked_id) {
+
+        var id = "#list_" + clicked_id;
+
+        $.ajax({
+            url : "http://localhost:8080/post/" + clicked_id,
+            type : "DELETE",
+            success : function(data) {
+                $(id).html("");
+            },
+            error : function name(){
+                $("#test").append("error");
+            }
+        });
+
+    }
+
+</script>
+</body>
+</html>
+
