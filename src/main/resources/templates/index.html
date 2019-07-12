@@ -2,33 +2,54 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Main</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <link rel="stylesheet" th:href="@{/css/main.css}" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 <body>
-<!-- Main Content -->
-<div class="container">
 
+<!-- Navigation bar -->
+<nav class="navbar navbar-light bg-light">
+    <div class="row">
+        <div class="col-xl-4 offset-xl-4">
+            <span class="navbar-brand mb-2 h1">Navbar</span>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container" id="main_page">
+<center>
     <div class="write-post">
-        <div class="write-title">
-            <h2>송아리 아이티 방명록 작성하기</h2>
+        <div class="write-title text-left">
+            <h2>방명록 작성하기</h2>
             <input class="form-control" type="text" name="title" id="title" placeholder="제목을 입력하세요.">
         </div>
         <div class="write-content">
             <textarea class="form-control" rows="5" name="content" id="content" placeholder="내용을 입력하세요."></textarea>
         </div>
-        <input type="button" class="btn btn-primary pull-right" id="write" value="작성하기">
+        <input type="button" class="btn btn-secondary btn-sm float-right" id="write" value="작성하기">
     </div>
+</center>
+
 
 
                 <div id="list">
                     <div th:id="'list_'+${post.id}" class="post-preview" th:each="post : ${posts}">
                         <h4 class="post-title" th:text="'제목 : ' +${post.title}"></h4>
-                        <h4 th:text="'내용 : ' + ${post.content}"></h4>
+                        <h6 th:text="'내용 : ' + ${post.content}"></h6>
                         <p class="post-meta">Posted by <a href="#">Guest</a> <strong th:text="${post.regDate}"> </strong> </p>
-                        <button class="btn btn-primary" th:id="'delete'+${post.id}" th:value="${post.id}" onclick="delete_click(this.value)">삭제</button>
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <form method="get" th:action="'http://localhost:8080/post/'+ ${post.id}">
+                                    <button class="btn btn-secondary modify" th:id="'modify'+${post.id}" th:value="${post.id}" onclick="modify_click(this.value)">수정</button>
+                                </form>
+                            </div>
+                            <div class="col-xs-1">
+                                <button class="btn btn-secondary" th:id="'delete'+${post.id}" th:value="${post.id}" onclick="delete_click(this.value)">삭제</button>
+                            </div>
+                        </div>
                         <hr>
                     </div>
                 </div>
@@ -84,6 +105,7 @@
         });
 
     }
+
 
 </script>
 </body>

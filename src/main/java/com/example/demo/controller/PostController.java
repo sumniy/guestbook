@@ -4,6 +4,7 @@ import com.example.demo.entity.Post;
 import com.example.demo.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 
@@ -28,14 +29,17 @@ public class PostController {
     }
 
     @GetMapping(value = "/{id}")
-    public Post findOne(@PathVariable Long id) {
-        return postRepository.findById(id).orElse(null);
+    public ModelAndView modify (@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("modify");
+        modelAndView.addObject(postRepository.findById(id).orElse(null));
+        return modelAndView;
     }
 
-//    업데이트 기능 : 아직 Postman 으로만 실행 가능
     @PutMapping(value = "/{id}")
     public Post updatetitle(@PathVariable Long id, @RequestBody Post body) {
         Post post = postRepository.findById(id).orElse(null);
+        assert post != null;
         post.setTitle(body.getTitle());
         post.setContent(body.getContent());
         return postRepository.save(post);

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modify</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- Main Content -->
+<div class="container">
+
+    <div class="write-post">
+        <div class="write-title">
+            <h2>게시글 수정</h2>
+            <input class="form-control" type="text" name="title" id="title_modify" th:value="${post.title}">
+        </div>
+        <div class="write-content">
+            <textarea class="form-control" rows="5" name="content" id="content_modify" th:value="${post.content}">[[${post.content}]]</textarea>
+        </div>
+        <button class="btn btn-primary" th:id="'modify'+${post.id}" th:value="${post.id}" onclick="modify_click(this.value)">수정하기</button>
+    </div>
+
+</div>
+<div id="test"></div>
+</div>
+</div>
+
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" language="javascript">
+    function modify_click(clicked_id) {
+
+        var data = {};
+        data["title"]=$('#title_modify').val();
+        data["content"]=$('#content_modify').val();
+
+        $.ajax({
+            url : "http://localhost:8080/post/" + clicked_id,
+            contentType : 'application/json',
+            type : "PUT",
+            data : JSON.stringify(data),
+            dataType : "json",
+            success : function(data) {
+                location.href = "http://localhost:8080/";
+            },
+            error : function name(){
+                $("#test").append("error");
+            }
+        });
+
+    }
+</script>
+</body>
+</html>
+
